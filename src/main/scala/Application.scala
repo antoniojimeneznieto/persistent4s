@@ -16,34 +16,6 @@ import natchez.Trace.Implicits.noop
 
 object Application extends IOApp.Simple:
 
-  /*   private val failureLogHandler: LogHandler[IO] = new LogHandler[IO]:
-    def run(event: doobie.util.log.LogEvent): IO[Unit] = event match
-      case ExecFailure(sql, params, label, exec, failure) =>
-        IO.println(
-          s"""[SQL ExecFailure] $label
-             |  SQL: ${sql.linesIterator
-              .dropWhile(_.trim.isEmpty)
-              .mkString("\n       ")}
-             |  Params: ${params.allParams
-              .map(_.mkString("(", ", ", ")"))
-              .mkString("[", ", ", "]")}
-             |  Elapsed: ${exec.toMillis} ms
-             |  Error: ${failure.getMessage}""".stripMargin
-        )
-      case ProcessingFailure(sql, params, label, exec, processing, failure) =>
-        IO.println(
-          s"""[SQL ProcessingFailure] $label
-             |  SQL: ${sql.linesIterator
-              .dropWhile(_.trim.isEmpty)
-              .mkString("\n       ")}
-             |  Params: ${params.allParams
-              .map(_.mkString("(", ", ", ")"))
-              .mkString("[", ", ", "]")}
-             |  Elapsed: ${exec.toMillis} ms exec + ${processing.toMillis} ms processing
-             |  Error: ${failure.getMessage}""".stripMargin
-        )
-      case Success(_, _, _, _, _) => IO.unit */
-
   private def sessionPoolRessource(
       postgresConfig: DbConfig
   ): Resource[IO, Resource[IO, Session[IO]]] =
@@ -96,7 +68,7 @@ object Application extends IOApp.Simple:
             val worker = ProjectionWorker(
               name = "enrollment-views",
               eventStore = eventStore,
-              eventLogXa = eventLogXa,
+              pool = eventLogXa,
               project = enrollmentView(_)
             )
 
@@ -106,21 +78,22 @@ object Application extends IOApp.Simple:
             val docRoutes: HttpRoutes[IO] =
               docs[IO](EnrollmentService)
 
-            routes.flatMap { apiRoutes =>
-              val httpApp =
-                withErrorLogging((apiRoutes <+> docRoutes).orNotFound)
-              EmberServerBuilder
-                .default[IO]
-                .withHost(host"0.0.0.0")
-                .withPort(port"8080")
-                .withHttpApp(httpApp)
-                .build
-                .map(server => (server, worker))
-            }
-          }
-          .use { (server, worker) =>
-            IO.println(s"Server started at http://localhost:8080") *>
-              IO.println("Swagger docs at http://localhost:8080/docs") *>
-              IO.println("Projection worker started") *>
-              worker.run.both(IO.never).void
+            routes
+              .flatMap { apiRoutes =>
+                val httpApp =
+                  withErrorLogging((apiRoutes <+> docRoutes).orNotFound)
+                EmberServerBuilder
+                  .default[IO]
+                  .withHost(host"0.0.0.0")
+                  .withPort(port"8080")
+                  .withHttpApp(httpApp)
+                  .build
+                  .map(server => (server, worker))
+              }
+              .use { (server, worker) =>
+                IO.println(s"Server started at http://localhost:8080") *>
+                  IO.println("Swagger docs at http://localhost:8080/docs") *>
+                  IO.println("Projection worker started") *>
+                  worker.run.both(IO.never).void
+              }
           }

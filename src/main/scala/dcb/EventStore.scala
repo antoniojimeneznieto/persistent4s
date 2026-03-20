@@ -11,6 +11,9 @@ import cats.instances.int
 import skunk.codec.all._
 import skunk.circe.codec.all.jsonb
 import cats.instances.string
+import skunk.data.TransactionIsolationLevel
+import skunk.data.TransactionAccessMode
+import skunk.exception.SkunkException
 // import skunk.syntax.all.sql
 // import skunk.syntax.stringcontext.sql
 
@@ -41,24 +44,39 @@ class EventStore(pool: Resource[IO, Session[IO]]):
   def append(
       newEvents: List[NewEvent],
       tags: Set[Tag],
-      expectedLastSequenceNumber: Long
+      expectedLastSequenceNumber: Long,
+      maxRetries: Int = 3
   ): IO[List[Event]] =
     if newEvents.isEmpty then IO.pure(List.empty)
     else
-      pool.use { session =>
-        session.transaction.use { _ =>
-          for
-            _ <- checkForConflicts(session, tags, expectedLastSequenceNumber)
-            appended <- newEvents.traverse { evt =>
-              session.unique(insertEventQ)(
-                evt.eventType *: tagsToJson(
-                  evt.tags
-                ) *: evt.payload *: EmptyTuple
-              )
+      pool
+        .use { session =>
+          session
+            .transaction(
+              TransactionIsolationLevel.Serializable,
+              TransactionAccessMode.ReadWrite
+            )
+            .use { _ =>
+              for
+                _ <- checkForConflicts(
+                  session,
+                  tags,
+                  expectedLastSequenceNumber
+                )
+                appended <- newEvents.traverse { evt =>
+                  session.unique(insertEventQ)(
+                    evt.eventType *: tagsToJson(
+                      evt.tags
+                    ) *: evt.payload *: EmptyTuple
+                  )
+                }
+              yield appended
             }
-          yield appended
         }
-      }
+        .recoverWith {
+          case _: SkunkException if maxRetries > 0 =>
+            append(newEvents, tags, expectedLastSequenceNumber, maxRetries - 1)
+        }
 
   def fetchAfter(afterSequenceNumber: Long, limit: Int = 100): IO[List[Event]] =
     pool.use { session =>
@@ -114,7 +132,7 @@ object EventStore:
   private def eventsByTagsQ(n: Int): Query[List[String], Event] =
     sql"""SELECT sequence_number, event_type, tags, payload, recorded_at
           FROM events
-          WHERE jsonb_exists_any(tags, ${text.list(n)})
+          WHERE tags ?| ARRAY[${text.list(n)}]::text[]
           ORDER BY sequence_number ASC"""
       .query(eventDecoder)
 
@@ -138,5 +156,5 @@ object EventStore:
   ): Query[Long *: List[String] *: EmptyTuple, Long] =
     sql"""SELECT COUNT(*) FROM events
           WHERE sequence_number > $int8
-          AND jsonb_exists_any(tags, ${text.list(n)})"""
+          AND tags ?| ARRAY[${text.list(n)}]::text[]"""
       .query(int8)
