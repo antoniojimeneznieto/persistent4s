@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-package core
+package persistent4s
 
-import cats.effect.{IO, IOApp}
+import java.util.UUID
 
-object Main extends IOApp.Simple:
-
-  override def run: IO[Unit] = IO.println("Hello, World!")
+case class Event(id: UUID, streamId: String, eventType: String, payload: String)

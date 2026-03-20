@@ -52,5 +52,6 @@ lazy val root = (project in file("."))
 
 lazy val core = (project in file("modules/core"))
   .settings(commonSettings)
+  .settings(name := "persistent4s")
 
 addCommandAlias("lint", ";scalafmtAll ;scalafixAll --rules OrganizeImports")
