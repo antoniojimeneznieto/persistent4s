@@ -1,11 +1,12 @@
-ThisBuild / tlBaseVersion    := "0.1"
-ThisBuild / scalaVersion     := "3.8.2"
-ThisBuild / tlJdkRelease     := Some(17)
-ThisBuild / organization     := "io.github.antoniojimeneznieto"
-ThisBuild / organizationName := "persistent4s"
-ThisBuild / startYear        := Some(2026)
-ThisBuild / licenses         := Seq(License.Apache2)
-ThisBuild / developers       := List(
+ThisBuild / tlBaseVersion          := "0.1"
+ThisBuild / tlMimaPreviousVersions := Set("0.1.1")
+ThisBuild / scalaVersion           := "3.8.2"
+ThisBuild / tlJdkRelease           := Some(17)
+ThisBuild / organization           := "io.github.antoniojimeneznieto"
+ThisBuild / organizationName       := "persistent4s"
+ThisBuild / startYear              := Some(2026)
+ThisBuild / licenses               := Seq(License.Apache2)
+ThisBuild / developers             := List(
   tlGitHubDev("antoniojimeneznieto", "Antonio Jimenez"),
 )
 
