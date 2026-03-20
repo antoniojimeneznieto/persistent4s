@@ -5,7 +5,7 @@ ThisBuild / organization     := "io.github.antoniojimeneznieto"
 ThisBuild / organizationName := "persistent4s"
 ThisBuild / startYear        := Some(2026)
 ThisBuild / licenses         := Seq(License.Apache2)
-ThisBuild / developers := List(
+ThisBuild / developers       := List(
   tlGitHubDev("antoniojimeneznieto", "Antonio Jimenez"),
 )
 
@@ -23,7 +23,7 @@ val commonSettings = List(
   libraryDependencies         ++= List(
     // CE
     "org.typelevel" %% "cats-effect" % "3.7.0",
-    "co.fs2"        %% "fs2-core"    % "3.12.0",
+    "co.fs2"        %% "fs2-core"    % "3.12.2",
 
     // Postgres
     "org.tpolecat" %% "skunk-core" % "0.6.5",
