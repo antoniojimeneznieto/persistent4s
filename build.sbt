@@ -5,7 +5,7 @@ ThisBuild / organization     := "io.github.antoniojimeneznieto"
 ThisBuild / organizationName := "persistent4s"
 ThisBuild / startYear        := Some(2026)
 ThisBuild / licenses         := Seq(License.Apache2)
-ThisBuild / developers := List(
+ThisBuild / developers       := List(
   tlGitHubDev("antoniojimeneznieto", "Antonio Jimenez"),
 )
 
@@ -34,7 +34,7 @@ val commonSettings = List(
     "io.circe" %% "circe-parser"  % "0.14.15",
 
     // Logging
-    "org.typelevel" %% "log4cats-slf4j" % "2.7.1",
+    "org.typelevel" %% "log4cats-slf4j" % "2.8.0",
 
     // Telemetry
     "org.typelevel" %% "otel4s-core" % "0.13.0",
