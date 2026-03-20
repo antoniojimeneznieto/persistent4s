@@ -5,7 +5,7 @@ ThisBuild / organization     := "io.github.antoniojimeneznieto"
 ThisBuild / organizationName := "persistent4s"
 ThisBuild / startYear        := Some(2026)
 ThisBuild / licenses         := Seq(License.Apache2)
-ThisBuild / developers := List(
+ThisBuild / developers       := List(
   tlGitHubDev("antoniojimeneznieto", "Antonio Jimenez"),
 )
 
@@ -42,7 +42,7 @@ val commonSettings = List(
     // Testing
     "ch.qos.logback"     % "logback-classic" % "1.5.32" % Test,
     "org.testcontainers" % "postgresql"      % "1.21.4" % Test,
-    "org.typelevel"     %% "weaver-cats"     % "0.11.3" % Test,
+    "org.typelevel"     %% "weaver-cats"     % "0.12.0" % Test,
   ),
 )
 
