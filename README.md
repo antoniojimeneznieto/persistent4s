@@ -1,1 +1,35 @@
 # persistent4s
+
+A purely functional event sourcing library for Scala, built on [Typelevel](https://typelevel.org/) libraries (cats-effect, fs2, skunk).
+
+## Overview
+
+persistent4s provides both **aggregateless** and **aggregate-based** event sourcing patterns, letting you choose the right level of abstraction for your use case.
+
+- **Aggregateless** — work directly with event streams. Append events, read streams, build projections. No aggregate boilerplate.
+- **Aggregate** — optional layer on top, with state folding and command handling for when you need it.
+
+## Modules
+
+| Module | Artifact | Description |
+|---|---|---|
+| core | `persistent4s-core` | Pure abstractions — `EventStore[F]`, domain types, aggregate support |
+| postgres | `persistent4s-postgres` | PostgreSQL implementation via [Skunk](https://github.com/tpolecat/skunk) |
+| circe | `persistent4s-circe` | JSON serialization via [Circe](https://github.com/circe/circe) |
+
+## Getting started
+
+```scala
+libraryDependencies ++= Seq(
+  "io.github.antoniojimeneznieto" %% "persistent4s-core"     % "<version>",
+  "io.github.antoniojimeneznieto" %% "persistent4s-postgres"  % "<version>",
+  "io.github.antoniojimeneznieto" %% "persistent4s-circe"     % "<version>",
+)
+```
+
+## Design principles
+
+- **Purely functional** — built on cats-effect `IO` and fs2 `Stream`
+- **Backend agnostic** — core abstractions have no database dependency
+- **Observable** — built-in support for tracing and metrics via [otel4s](https://github.com/typelevel/otel4s)
+- **Minimal** — pull in only the modules you need
