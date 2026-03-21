@@ -2,6 +2,8 @@
 
 A purely functional event sourcing library for Scala, built on [Typelevel](https://typelevel.org/) libraries (cats-effect, fs2, skunk).
 
+> **Early stage project** — persistent4s is in active prototyping. APIs will change, modules may be added or removed, and nothing is stable yet. Feedback and ideas are welcome via [issues](https://github.com/antoniojimeneznieto/persistent4s/issues).
+
 ## Overview
 
 persistent4s provides both **aggregateless** and **aggregate-based** event sourcing patterns, letting you choose the right level of abstraction for your use case.
