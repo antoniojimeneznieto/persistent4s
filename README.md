@@ -19,6 +19,7 @@ persistent4s provides both **aggregateless** and **aggregate-based** event sourc
 | postgres | `persistent4s-postgres` | PostgreSQL implementation via [Skunk](https://github.com/tpolecat/skunk) |
 | circe | `persistent4s-circe` | JSON serialization via [Circe](https://github.com/circe/circe) |
 | kafka | `persistent4s-kafka` | Event publishing/subscribing via [fs2-kafka](https://github.com/fd4s/fs2-kafka) |
+| testkit | `persistent4s-testkit` | In-memory EventStore and test helpers for unit testing |
 
 ## Getting started
 

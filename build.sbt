@@ -38,7 +38,7 @@ val WeaverV = "0.12.0"
 
 lazy val root = (project in file("."))
   .enablePlugins(NoPublishPlugin)
-  .aggregate(core, postgres, circe, kafka, tests)
+  .aggregate(core, postgres, circe, kafka, testkit, tests)
 
 lazy val core = (project in file("modules/core"))
   .settings(
@@ -88,8 +88,18 @@ lazy val kafka = (project in file("modules/kafka"))
     ),
   )
 
+lazy val testkit = (project in file("modules/testkit"))
+  .dependsOn(core)
+  .settings(
+    name                 := "persistent4s-testkit",
+    libraryDependencies ++= List(
+      "org.typelevel" %% "cats-effect" % CatsEffectV,
+      "org.typelevel" %% "weaver-cats" % WeaverV % Test,
+    ),
+  )
+
 lazy val tests = (project in file("modules/tests"))
-  .dependsOn(core, postgres, circe, kafka)
+  .dependsOn(core, postgres, circe, kafka, testkit)
   .enablePlugins(NoPublishPlugin)
   .settings(
     name                 := "persistent4s-tests",
