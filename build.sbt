@@ -10,9 +10,6 @@ ThisBuild / developers             := List(
   tlGitHubDev("antoniojimeneznieto", "Antonio Jimenez"),
 )
 
-// Publishing
-ThisBuild / sonatypeCredentialHost := xerial.sbt.Sonatype.sonatypeCentralHost
-
 Global / onChangedBuildSource := ReloadOnSourceChanges
 Global / semanticdbEnabled    := true // for metals
 
@@ -24,7 +21,7 @@ val commonSettings = List(
   libraryDependencies         ++= List(
     // CE
     "org.typelevel" %% "cats-effect" % "3.7.0",
-    "co.fs2"        %% "fs2-core"    % "3.12.0",
+    "co.fs2"        %% "fs2-core"    % "3.12.2",
 
     // Postgres
     "org.tpolecat" %% "skunk-core" % "0.6.5",
@@ -35,15 +32,15 @@ val commonSettings = List(
     "io.circe" %% "circe-parser"  % "0.14.15",
 
     // Logging
-    "org.typelevel" %% "log4cats-slf4j" % "2.7.1",
+    "org.typelevel" %% "log4cats-slf4j" % "2.8.0",
 
     // Telemetry
-    "org.typelevel" %% "otel4s-core" % "0.13.0",
+    "org.typelevel" %% "otel4s-core" % "0.13.2",
 
     // Testing
     "ch.qos.logback"     % "logback-classic" % "1.5.32" % Test,
     "org.testcontainers" % "postgresql"      % "1.21.4" % Test,
-    "org.typelevel"     %% "weaver-cats"     % "0.11.3" % Test,
+    "org.typelevel"     %% "weaver-cats"     % "0.12.0" % Test,
   ),
 )
 
