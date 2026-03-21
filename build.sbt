@@ -1,5 +1,5 @@
 ThisBuild / tlBaseVersion          := "0.1"
-ThisBuild / tlMimaPreviousVersions := Set("0.1.1")
+ThisBuild / tlMimaPreviousVersions := Set.empty // reset after multi-module restructure
 ThisBuild / scalaVersion           := "3.8.2"
 ThisBuild / tlJdkRelease           := Some(17)
 ThisBuild / organization           := "io.github.antoniojimeneznieto"
