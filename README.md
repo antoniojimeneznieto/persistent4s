@@ -18,6 +18,7 @@ persistent4s provides both **aggregateless** and **aggregate-based** event sourc
 | core | `persistent4s-core` | Pure abstractions — `EventStore[F]`, domain types, aggregate support |
 | postgres | `persistent4s-postgres` | PostgreSQL implementation via [Skunk](https://github.com/tpolecat/skunk) |
 | circe | `persistent4s-circe` | JSON serialization via [Circe](https://github.com/circe/circe) |
+| kafka | `persistent4s-kafka` | Event publishing/subscribing via [fs2-kafka](https://github.com/fd4s/fs2-kafka) |
 
 ## Getting started
 

@@ -32,11 +32,13 @@ val LogbackV = "1.5.32"
 
 val TestcontainersV = "1.21.4"
 
+val Fs2KafkaV = "3.9.1"
+
 val WeaverV = "0.12.0"
 
 lazy val root = (project in file("."))
   .enablePlugins(NoPublishPlugin)
-  .aggregate(core, postgres, circe, tests)
+  .aggregate(core, postgres, circe, kafka, tests)
 
 lazy val core = (project in file("modules/core"))
   .settings(
@@ -74,8 +76,20 @@ lazy val circe = (project in file("modules/circe"))
     ),
   )
 
+lazy val kafka = (project in file("modules/kafka"))
+  .dependsOn(core)
+  .settings(
+    name                 := "persistent4s-kafka",
+    libraryDependencies ++= List(
+      "com.github.fd4s"   %% "fs2-kafka"       % Fs2KafkaV,
+      "org.typelevel"     %% "weaver-cats"     % WeaverV         % Test,
+      "ch.qos.logback"     % "logback-classic" % LogbackV        % Test,
+      "org.testcontainers" % "kafka"           % TestcontainersV % Test,
+    ),
+  )
+
 lazy val tests = (project in file("modules/tests"))
-  .dependsOn(core, postgres, circe)
+  .dependsOn(core, postgres, circe, kafka)
   .enablePlugins(NoPublishPlugin)
   .settings(
     name                 := "persistent4s-tests",
