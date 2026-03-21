@@ -10,13 +10,9 @@ project/boot/
 project/plugins/project/
 project/local-plugins.sbt
 .history
-.ensime
-.ensime_cache/
+.sbtopts
 .sbt-scripted/
 local.sbt
-
-# Smithy4s generated code
-**/scala-generated/
 
 # Bloop
 .bsp
