@@ -20,4 +20,5 @@ import fs2.Stream
 import persistent4s.EventEnvelope
 
 trait EventSubscriber[F[_], A]:
+
   def subscribe(topic: String, fromBeginning: Boolean): Stream[F, EventEnvelope[A]]

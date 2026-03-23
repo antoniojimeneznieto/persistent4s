@@ -17,5 +17,7 @@
 package persistent4s
 
 trait Projection[F[_], S, A]:
+
   def initial: S
+
   def handle(state: S, event: EventEnvelope[A]): F[S]
