@@ -20,10 +20,10 @@ import java.time.Instant
 import java.util.UUID
 
 final case class EventMetadata(
-    eventId: UUID,
-    streamId: StreamId,
-    position: Long,
-    globalPosition: Long,
-    eventType: String,
-    timestamp: Instant,
+  eventId: UUID,
+  streamId: StreamId,
+  position: Long,
+  globalPosition: Long,
+  eventType: String,
+  timestamp: Instant,
 )

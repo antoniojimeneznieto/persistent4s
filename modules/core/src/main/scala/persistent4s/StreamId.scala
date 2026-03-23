@@ -19,6 +19,7 @@ package persistent4s
 opaque type StreamId = String
 
 object StreamId:
+
   def apply(value: String): StreamId = value
 
   extension (id: StreamId) def value: String = id

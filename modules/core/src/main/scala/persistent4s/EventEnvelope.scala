@@ -17,6 +17,6 @@
 package persistent4s
 
 final case class EventEnvelope[A](
-    metadata: EventMetadata,
-    payload: A,
+  metadata: EventMetadata,
+  payload: A,
 )
