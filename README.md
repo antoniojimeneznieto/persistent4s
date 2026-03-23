@@ -28,6 +28,8 @@ libraryDependencies ++= Seq(
   "io.github.antoniojimeneznieto" %% "persistent4s-core"     % "<version>",
   "io.github.antoniojimeneznieto" %% "persistent4s-postgres"  % "<version>",
   "io.github.antoniojimeneznieto" %% "persistent4s-circe"     % "<version>",
+  "io.github.antoniojimeneznieto" %% "persistent4s-kafka"     % "<version>",
+  "io.github.antoniojimeneznieto" %% "persistent4s-testkit"   % "<version>" % Test,
 )
 ```
 
