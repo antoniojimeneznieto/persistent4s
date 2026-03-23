@@ -16,9 +16,13 @@
 
 package persistent4s
 
-opaque type StreamId = String
+final case class Tag(category: String, id: String):
 
-object StreamId:
-  def apply(value: String): StreamId = value
+  def value: String = s"$category:$id"
 
-  extension (id: StreamId) def value: String = id
+object Tag:
+
+  def fromString(s: String): Option[Tag] =
+    s.split(":", 2) match
+      case Array(category, id) => Some(Tag(category, id))
+      case _                   => None

@@ -16,13 +16,9 @@
 
 package persistent4s
 
-import java.time.Instant
-import java.util.UUID
-
-final case class EventMetadata(
-  eventId: UUID,
-  tags: Set[Tag],
-  globalPosition: Long,
-  eventType: String,
-  timestamp: Instant,
-)
+final case class IndexConflictException(
+    expectedIndex: Long,
+    actualIndex: Long,
+) extends RuntimeException(
+      s"Index conflict: expected $expectedIndex, actual $actualIndex",
+    )
