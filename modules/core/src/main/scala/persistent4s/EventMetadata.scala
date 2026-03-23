@@ -16,9 +16,14 @@
 
 package persistent4s
 
-import fs2.Stream
+import java.time.Instant
+import java.util.UUID
 
-trait EventStore[F[_], A]:
-  def append(streamId: StreamId, events: List[A], expectedVersion: Option[Long] = None): F[Unit]
-  def read(streamId: StreamId): Stream[F, EventEnvelope[A]]
-  def readAll(fromPosition: Long): Stream[F, EventEnvelope[A]]
+final case class EventMetadata(
+    eventId: UUID,
+    streamId: StreamId,
+    position: Long,
+    globalPosition: Long,
+    eventType: String,
+    timestamp: Instant,
+)

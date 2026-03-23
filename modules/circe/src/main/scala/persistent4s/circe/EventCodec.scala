@@ -16,4 +16,8 @@
 
 package persistent4s.circe
 
-trait EventCodec
+import io.circe.Json
+
+trait EventCodec[A]:
+  def encode(event: A): Json
+  def decode(eventType: String, json: Json): Either[Throwable, A]

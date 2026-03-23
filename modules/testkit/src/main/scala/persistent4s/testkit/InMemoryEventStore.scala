@@ -16,4 +16,6 @@
 
 package persistent4s.testkit
 
-trait InMemoryEventStore[F[_]]
+import persistent4s.EventStore
+
+trait InMemoryEventStore[F[_], A] extends EventStore[F, A]

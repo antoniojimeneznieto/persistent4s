@@ -16,9 +16,7 @@
 
 package persistent4s
 
-import fs2.Stream
-
-trait EventStore[F[_], A]:
-  def append(streamId: StreamId, events: List[A], expectedVersion: Option[Long] = None): F[Unit]
-  def read(streamId: StreamId): Stream[F, EventEnvelope[A]]
-  def readAll(fromPosition: Long): Stream[F, EventEnvelope[A]]
+final case class EventEnvelope[A](
+    metadata: EventMetadata,
+    payload: A,
+)

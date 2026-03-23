@@ -16,9 +16,9 @@
 
 package persistent4s
 
-import fs2.Stream
+opaque type StreamId = String
 
-trait EventStore[F[_], A]:
-  def append(streamId: StreamId, events: List[A], expectedVersion: Option[Long] = None): F[Unit]
-  def read(streamId: StreamId): Stream[F, EventEnvelope[A]]
-  def readAll(fromPosition: Long): Stream[F, EventEnvelope[A]]
+object StreamId:
+  def apply(value: String): StreamId = value
+
+  extension (id: StreamId) def value: String = id
