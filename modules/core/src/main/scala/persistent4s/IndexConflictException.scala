@@ -17,8 +17,8 @@
 package persistent4s
 
 final case class IndexConflictException(
-    expectedIndex: Long,
-    actualIndex: Long,
+  expectedIndex: Long,
+  actualIndex: Long,
 ) extends RuntimeException(
       s"Index conflict: expected $expectedIndex, actual $actualIndex",
     )
