@@ -18,7 +18,7 @@ Global / semanticdbEnabled    := true // for metals
 // Versions
 val CatsEffectV = "3.7.0"
 
-val Fs2V = "3.12.2"
+val Fs2V = "3.13.0"
 
 val SkunkV = "0.6.5"
 
