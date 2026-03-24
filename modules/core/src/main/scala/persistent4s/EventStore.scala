@@ -22,6 +22,6 @@ trait EventStore[F[_], A]:
 
   def append(expectedIndex: Long, events: List[(Set[Tag], A)]*): F[Unit]
 
-  def read(tags: Set[Tag]*): Stream[F, EventEnvelope[A]]
+  def read(eventTypes: List[String], tags: Set[Tag]*): Stream[F, EventEnvelope[A]]
 
   def readAll(fromPosition: Long): Stream[F, EventEnvelope[A]]
