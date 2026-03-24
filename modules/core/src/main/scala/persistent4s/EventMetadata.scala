@@ -20,9 +20,8 @@ import java.time.Instant
 import java.util.UUID
 
 final case class EventMetadata(
-  eventId: UUID,
-  tags: Set[Tag],
   globalPosition: Long,
+  tags: Set[Tag],
   eventType: String,
   timestamp: Instant,
 )
