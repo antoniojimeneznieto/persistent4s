@@ -24,7 +24,8 @@ import fs2.Stream
 trait EventStore[F[_], A]:
 
   /** Append events to the event store. The expected index is used for optimistic concurrency control. If the actual
-    * index in the event store does not match the expected index, an IndexConflictException is thrown.
+    * index in the event store does not match the expected index, an IndexConflictException is thrown and none of the
+    * events are appended.
     *
     * @param expectedIndex
     *   the expected index of the event store before appending the events
