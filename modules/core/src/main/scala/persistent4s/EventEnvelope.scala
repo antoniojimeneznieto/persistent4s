@@ -16,6 +16,13 @@
 
 package persistent4s
 
+/** An EventEnvelope is a wrapper around an event that includes both the event's metadata and its payload.
+  *
+  * @param metadata
+  *   the metadata associated with the event
+  * @param payload
+  *   the actual event data
+  */
 final case class EventEnvelope[A](
   metadata: EventMetadata,
   payload: A,

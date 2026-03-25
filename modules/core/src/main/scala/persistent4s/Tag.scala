@@ -16,6 +16,16 @@
 
 package persistent4s
 
+/** A Tag is a simple key-value pair that can be associated with an event in the event store. Tags are used to
+  * categorize and filter events when reading from the event store. Each tag consists of a category and an identifier,
+  * and the value of the tag is a string in the format "category:id". The Tag class provides a method to convert a Tag
+  * to its string representation, as well as a companion object with a method to parse a Tag from a string.
+  *
+  * @param category
+  *   the category of the tag
+  * @param id
+  *   the identifier of the tag
+  */
 final case class Tag(category: String, id: String):
 
   def value: String = s"$category:$id"
