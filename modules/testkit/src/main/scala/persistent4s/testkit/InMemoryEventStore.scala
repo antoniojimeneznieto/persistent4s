@@ -31,6 +31,8 @@ final case class InMemoryEventStore[F[_]: Monad: Async, A] private (
   store: Ref[F, Vector[EventEnvelope[A]]],
 ) extends EventStore[F, A]:
 
+  def getEvents: F[Vector[EventEnvelope[A]]] = store.get
+
   override def append(expectedIndex: Long, events: List[(Set[Tag], String, A)]*): F[Unit] =
     store.modify { currentEvents =>
       val incomingTags = events.flatten.map(_._1).flatten.toSet
@@ -62,11 +64,13 @@ final case class InMemoryEventStore[F[_]: Monad: Async, A] private (
     Stream
       .eval(store.get)
       .flatMap(events => Stream.emits(events))
-      .filter(env =>
-        eventTypes.contains(env.metadata.eventType) && env.metadata.tags.exists(tags.flatten.toSet.contains),
-      )
+      .filter { env =>
+        val matchesTags = env.metadata.tags.exists(tags.flatten.toSet.contains)
+        val matchesTypes = eventTypes.isEmpty || eventTypes.contains(env.metadata.eventType)
+        matchesTags && matchesTypes
+      }
 
 object InMemoryEventStore:
 
-  def apply[F[_], A](using F: Async[F]): F[InMemoryEventStore[F, A]] =
+  def make[F[_]: Async, A]: F[InMemoryEventStore[F, A]] =
     Ref.of[F, Vector[EventEnvelope[A]]](Vector.empty).map(InMemoryEventStore(_))
