@@ -8,6 +8,7 @@ ThisBuild / startYear              := Some(2026)
 ThisBuild / licenses               := Seq(License.Apache2)
 ThisBuild / developers             := List(
   tlGitHubDev("antoniojimeneznieto", "Antonio Jimenez"),
+  tlGitHubDev("Bjolidon", "Bastien Jolidon"),
 )
 ThisBuild / scalafmtOnCompile := false // recommended in Scala 3
 ThisBuild / testFrameworks    += new TestFramework("weaver.framework.CatsEffect")
