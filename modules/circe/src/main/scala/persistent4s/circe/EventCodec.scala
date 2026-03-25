@@ -33,8 +33,8 @@ object CirceEventCodec:
     *   a function that decodes an event from its type name and a circe Json value
     */
   def make[A](
-      encodeEvent: A => Json,
-      decodeEvent: (String, Json) => Either[Throwable, A],
+    encodeEvent: A => Json,
+    decodeEvent: (String, Json) => Either[Throwable, A],
   ): EventCodec[A] =
     new EventCodec[A]:
       def encode(event: A): String =
