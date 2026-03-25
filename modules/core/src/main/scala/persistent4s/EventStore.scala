@@ -49,12 +49,3 @@ trait EventStore[F[_], A]:
     *   a Stream of EventEnvelope[A] containing the matching events
     */
   def read(eventTypes: List[String], tags: Set[Tag]*): Stream[F, EventEnvelope[A]]
-
-  /** Read all events from the event store starting from a given position. The returned Stream will emit
-    * EventEnvelope[A] instances starting from the specified position. The Stream will complete when there are no more
-    * events to read.
-    *
-    * @param fromPosition
-    *   the position in the event store to start reading from
-    */
-  def readAll(fromPosition: Long): Stream[F, EventEnvelope[A]]
