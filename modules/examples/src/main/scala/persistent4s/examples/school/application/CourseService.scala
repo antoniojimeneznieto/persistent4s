@@ -30,5 +30,5 @@ class CourseServiceImpl(using EventStore[IO, SchoolEvent]) extends CourseService
   def createCourse(title: String, capacity: Int): IO[CreateCourseOutput] =
     for
       courseId <- IO(UUID.randomUUID().toString)
-      _       <- CreateCourseHandler.run[IO](CreateCourse(courseId, title, capacity))
+      _        <- CreateCourseHandler.run[IO](CreateCourse(courseId, title, capacity))
     yield CreateCourseOutput(courseId)

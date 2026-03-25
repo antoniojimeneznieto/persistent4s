@@ -29,10 +29,8 @@ class EventsServiceImpl(store: InMemoryEventStore[IO, SchoolEvent]) extends Even
       GetEventsOutput(
         events.toList.map { env =>
           Event(
-            globalPosition = env.metadata.globalPosition,
-            tags = env.metadata.tags.toList.map(_.value),
-            eventType = env.metadata.eventType,
-            timestamp = env.metadata.timestamp.toString,
+            globalPosition = env.metadata.globalPosition, tags = env.metadata.tags.toList.map(_.value),
+            eventType = env.metadata.eventType, timestamp = env.metadata.timestamp.toString,
             payload = env.payload.toString,
           )
         },

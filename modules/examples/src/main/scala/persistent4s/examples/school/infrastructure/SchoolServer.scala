@@ -47,10 +47,10 @@ object SchoolServer extends IOApp.Simple:
       store  <- InMemoryEventStore.make[IO, SchoolEvent]
       routes <- routes(store).allocated.map(_._1)
       _      <- EmberServerBuilder
-                  .default[IO]
-                  .withHost(host"0.0.0.0")
-                  .withPort(port"8181")
-                  .withHttpApp(routes.orNotFound)
-                  .build
-                  .useForever
+             .default[IO]
+             .withHost(host"0.0.0.0")
+             .withPort(port"8181")
+             .withHttpApp(routes.orNotFound)
+             .build
+             .useForever
     yield ()
