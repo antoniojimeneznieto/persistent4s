@@ -16,6 +16,57 @@
 
 package persistent4s.testkit
 
-import persistent4s.EventStore
+import persistent4s.{EventStore, Tag, EventEnvelope, IndexConflictException, EventMetadata}
+import cats.effect.*
+import fs2.Stream
+import cats.implicits.*
+import cats.*
 
-trait InMemoryEventStore[F[_], A] extends EventStore[F, A]
+/** An in-memory implementation of the EventStore trait for testing purposes. This implementation use Ref to store
+  * events in memory and does not persist them to any external storage. It is intended for use in unit tests where you
+  * want to verify the behavior of your command handlers and event processing logic without relying on an actual
+  * database or event store.
+  */
+final case class InMemoryEventStore[F[_]: Monad: Async, A] private (
+  store: Ref[F, Vector[EventEnvelope[A]]],
+) extends EventStore[F, A]:
+
+  override def append(expectedIndex: Long, events: List[(Set[Tag], String, A)]*): F[Unit] =
+    store.modify { currentEvents =>
+      val incomingTags = events.flatten.map(_._1).flatten.toSet
+      val relevantEvents = currentEvents.filter(env => env.metadata.tags.exists(incomingTags.contains))
+      val actualIndex = relevantEvents.lastOption.map(_.metadata.globalPosition).getOrElse(0L)
+
+      if (actualIndex != expectedIndex) {
+        (currentEvents, Left(new IndexConflictException(expectedIndex, actualIndex)))
+      } else {
+        val newEvents = events.flatten.map { case (tags, eventType, event) =>
+          EventEnvelope(
+            EventMetadata(
+              globalPosition = currentEvents.size.toLong,
+              tags = tags,
+              eventType = eventType,
+              timestamp = java.time.Instant.now(),
+            ),
+            event,
+          )
+        }
+        (currentEvents ++ newEvents, Right(()))
+      }
+    }.flatMap {
+      case Left(error) => Async[F].raiseError(error)
+      case Right(_)    => Async[F].unit
+    }
+
+  override def read(eventTypes: List[String], tags: Set[Tag]*): Stream[F, EventEnvelope[A]] =
+    Stream
+      .eval(store.get)
+      .flatMap(events => Stream.emits(events))
+      .filter(env =>
+        eventTypes.contains(env.metadata.eventType) && env.metadata.tags.exists(tags.flatten.toSet.contains),
+      )
+
+object InMemoryEventStore:
+
+  def apply[F[_], A](using F: Async[F]): F[InMemoryEventStore[F, A]] =
+    Ref.of[F, Vector[EventEnvelope[A]]](Vector.empty).map(InMemoryEventStore(_))

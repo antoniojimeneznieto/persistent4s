@@ -50,4 +50,4 @@ trait CommandHandler[F[_], C, S, E]:
   /** Produce the events that result from applying the command, each with its own set of tags. Only called after
     * validation passes.
     */
-  def decide(state: S, command: C): List[(Set[Tag], E)]
+  def decide(state: S, command: C): List[(Set[Tag], String, E)]
