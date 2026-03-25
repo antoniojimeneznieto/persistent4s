@@ -36,9 +36,13 @@ val Fs2KafkaV = "3.9.1"
 
 val WeaverV = "0.12.0"
 
+val Http4sV = "0.23.30"
+
+val Smithy4sV = smithy4s.codegen.BuildInfo.version
+
 lazy val root = (project in file("."))
   .enablePlugins(NoPublishPlugin)
-  .aggregate(core, postgres, circe, kafka, testkit, tests)
+  .aggregate(core, postgres, circe, kafka, testkit, tests, examples)
 
 lazy val core = (project in file("modules/core"))
   .settings(
@@ -104,10 +108,23 @@ lazy val tests = (project in file("modules/tests"))
   .settings(
     name                 := "persistent4s-tests",
     libraryDependencies ++= List(
-      "org.typelevel"     %% "weaver-cats"     % WeaverV,
-      "ch.qos.logback"     % "logback-classic" % LogbackV,
-      "org.testcontainers" % "postgresql"      % TestcontainersV,
+      "org.typelevel"     %% "weaver-cats"     % WeaverV         % Test,
+      "ch.qos.logback"     % "logback-classic" % LogbackV        % Test,
+      "org.testcontainers" % "postgresql"      % TestcontainersV % Test,
     ),
   )
 
-addCommandAlias("lint", ";scalafmtAll ;scalafixAll --rules OrganizeImports")
+lazy val examples = (project in file("modules/examples"))
+  .dependsOn(core, testkit)
+  .enablePlugins(NoPublishPlugin, Smithy4sCodegenPlugin)
+  .settings(
+    name                 := "persistent4s-examples",
+    libraryDependencies ++= List(
+      "com.disneystreaming.smithy4s" %% "smithy4s-http4s"         % Smithy4sV,
+      "com.disneystreaming.smithy4s" %% "smithy4s-http4s-swagger" % Smithy4sV,
+      "org.http4s"                   %% "http4s-ember-server"     % Http4sV,
+      "ch.qos.logback"                % "logback-classic"         % LogbackV,
+    ),
+  )
+
+addCommandAlias("lint", ";scalafmtAll ;scalafmtSbt")
