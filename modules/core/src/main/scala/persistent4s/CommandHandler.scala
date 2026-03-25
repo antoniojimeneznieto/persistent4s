@@ -33,6 +33,11 @@ trait CommandHandler[F[_], C, S, E]:
   /** Which tags to read from the event store for this command. */
   def tags(command: C): Set[Tag]
 
+  /** The event types that this handler is interested in for building the state. If not specified, all events with the
+    * relevant tags will be included.
+    */
+  def eventTypes: Option[Set[String]] = None
+
   /** The initial state before any events have been applied. */
   def initial: S
 
