@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
-package persistent4s.kafka
+package persistent4s.examples.school.domain
 
-import persistent4s.EventEnvelope
-
-trait EventPublisher[F[_], A]:
-
-  def publish(topic: String, event: EventEnvelope[A]): F[Unit]
+trait SchoolEvent

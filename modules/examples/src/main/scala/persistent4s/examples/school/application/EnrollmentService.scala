@@ -14,10 +14,15 @@
  * limitations under the License.
  */
 
-package persistent4s.kafka
+package persistent4s.examples.school.application
 
-import persistent4s.EventEnvelope
+import cats.effect.IO
 
-trait EventPublisher[F[_], A]:
+import persistent4s.examples.school.api.EnrollmentService
+import persistent4s.examples.school.domain.enrollment.*
+import persistent4s.testkit.implicits.*
 
-  def publish(topic: String, event: EventEnvelope[A]): F[Unit]
+class EnrollmentServiceImpl extends EnrollmentService[IO]:
+
+  def enrollStudent(studentId: String, courseId: String): IO[Unit] =
+    EnrollStudentHandler.run(EnrollStudent(studentId, courseId))

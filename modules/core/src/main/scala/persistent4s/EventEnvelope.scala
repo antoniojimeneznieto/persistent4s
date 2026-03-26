@@ -14,10 +14,16 @@
  * limitations under the License.
  */
 
-package persistent4s.kafka
+package persistent4s
 
-import persistent4s.EventEnvelope
-
-trait EventPublisher[F[_], A]:
-
-  def publish(topic: String, event: EventEnvelope[A]): F[Unit]
+/** An EventEnvelope is a wrapper around an event that includes both the event's metadata and its payload.
+  *
+  * @param metadata
+  *   the metadata associated with the event
+  * @param payload
+  *   the actual event data
+  */
+final case class EventEnvelope[A](
+  metadata: EventMetadata,
+  payload: A,
+)

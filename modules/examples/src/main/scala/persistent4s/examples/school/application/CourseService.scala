@@ -14,10 +14,19 @@
  * limitations under the License.
  */
 
-package persistent4s.kafka
+package persistent4s.examples.school.application
 
-import persistent4s.EventEnvelope
+import java.util.UUID
+import cats.effect.IO
 
-trait EventPublisher[F[_], A]:
+import persistent4s.examples.school.api.{CourseService, CreateCourseOutput}
+import persistent4s.examples.school.domain.course.*
+import persistent4s.testkit.implicits.*
 
-  def publish(topic: String, event: EventEnvelope[A]): F[Unit]
+class CourseServiceImpl extends CourseService[IO]:
+
+  def createCourse(title: String, capacity: Int): IO[CreateCourseOutput] =
+    for
+      courseId <- IO(UUID.randomUUID().toString)
+      _        <- CreateCourseHandler.run[IO](CreateCourse(courseId, title, capacity))
+    yield CreateCourseOutput(courseId)

@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package persistent4s.kafka
+package persistent4s.examples.school.domain.course
 
-import persistent4s.EventEnvelope
+import persistent4s.examples.school.domain.SchoolEvent
 
-trait EventPublisher[F[_], A]:
+sealed trait CourseEvent extends SchoolEvent
 
-  def publish(topic: String, event: EventEnvelope[A]): F[Unit]
+final case class CourseCreated(courseId: String, title: String, capacity: Int) extends CourseEvent

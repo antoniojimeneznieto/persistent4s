@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package persistent4s.kafka
+package persistent4s.testkit
 
-import persistent4s.EventEnvelope
+import cats.effect.IO
+import cats.effect.unsafe.implicits.global
 
-trait EventPublisher[F[_], A]:
+object implicits:
 
-  def publish(topic: String, event: EventEnvelope[A]): F[Unit]
+  implicit def store[A]: InMemoryEventStore[IO, A] = InMemoryEventStore.make[IO, A].unsafeRunSync()

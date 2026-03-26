@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package persistent4s.kafka
+package persistent4s
 
-import persistent4s.EventEnvelope
+trait Projection[F[_], S, A]:
 
-trait EventPublisher[F[_], A]:
+  def initial: S
 
-  def publish(topic: String, event: EventEnvelope[A]): F[Unit]
+  def handle(state: S, event: EventEnvelope[A]): F[S]

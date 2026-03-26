@@ -14,10 +14,18 @@
  * limitations under the License.
  */
 
-package persistent4s.kafka
+package persistent4s
 
-import persistent4s.EventEnvelope
+/** A codec for serializing and deserializing events. The serialization format is left to the implementation (e.g. JSON
+  * via Circe, binary, etc.).
+  *
+  * @tparam A
+  *   the event type
+  */
+trait EventCodec[A]:
 
-trait EventPublisher[F[_], A]:
+  /** Serialize an event to a String representation. */
+  def encode(event: A): String
 
-  def publish(topic: String, event: EventEnvelope[A]): F[Unit]
+  /** Deserialize an event from its type name and String representation. */
+  def decode(eventType: String, payload: String): Either[Throwable, A]
