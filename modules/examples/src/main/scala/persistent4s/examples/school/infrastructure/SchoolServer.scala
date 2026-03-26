@@ -24,33 +24,27 @@ import org.http4s.HttpRoutes
 import smithy4s.http4s.SimpleRestJsonBuilder
 import smithy4s.http4s.swagger.docs
 
-import persistent4s.EventStore
 import persistent4s.examples.school.api.*
 import persistent4s.examples.school.application.*
-import persistent4s.examples.school.domain.SchoolEvent
-import persistent4s.testkit.InMemoryEventStore
 
 object SchoolServer extends IOApp.Simple:
 
-  def routes(store: InMemoryEventStore[IO, SchoolEvent]): Resource[IO, HttpRoutes[IO]] =
-    given EventStore[IO, SchoolEvent] = store
+  val routes: Resource[IO, HttpRoutes[IO]] =
     for
       studentRoutes    <- SimpleRestJsonBuilder.routes(StudentServiceImpl()).resource
       courseRoutes     <- SimpleRestJsonBuilder.routes(CourseServiceImpl()).resource
       enrollmentRoutes <- SimpleRestJsonBuilder.routes(EnrollmentServiceImpl()).resource
-      eventsRoutes     <- SimpleRestJsonBuilder.routes(EventsServiceImpl(store)).resource
+      eventsRoutes     <- SimpleRestJsonBuilder.routes(EventsServiceImpl()).resource
       docsRoutes        = docs[IO](StudentService, CourseService, EnrollmentService, EventsService)
     yield studentRoutes <+> courseRoutes <+> enrollmentRoutes <+> eventsRoutes <+> docsRoutes
 
   def run: IO[Unit] =
-    for
-      store  <- InMemoryEventStore.make[IO, SchoolEvent]
-      routes <- routes(store).allocated.map(_._1)
-      _      <- EmberServerBuilder
-             .default[IO]
-             .withHost(host"0.0.0.0")
-             .withPort(port"8181")
-             .withHttpApp(routes.orNotFound)
-             .build
-             .useForever
-    yield ()
+    routes.allocated.map(_._1).flatMap { routes =>
+      EmberServerBuilder
+        .default[IO]
+        .withHost(host"0.0.0.0")
+        .withPort(port"8181")
+        .withHttpApp(routes.orNotFound)
+        .build
+        .useForever
+    }

@@ -19,13 +19,11 @@ package persistent4s.examples.school.application
 import java.util.UUID
 import cats.effect.IO
 
-import persistent4s.EventStore
-import persistent4s.syntax.*
 import persistent4s.examples.school.api.{CourseService, CreateCourseOutput}
-import persistent4s.examples.school.domain.SchoolEvent
 import persistent4s.examples.school.domain.course.*
+import persistent4s.testkit.implicits.*
 
-class CourseServiceImpl(using EventStore[IO, SchoolEvent]) extends CourseService[IO]:
+class CourseServiceImpl extends CourseService[IO]:
 
   def createCourse(title: String, capacity: Int): IO[CreateCourseOutput] =
     for

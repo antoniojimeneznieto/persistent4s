@@ -18,13 +18,11 @@ package persistent4s.examples.school.application
 
 import cats.effect.IO
 
-import persistent4s.EventStore
-import persistent4s.syntax.*
 import persistent4s.examples.school.api.EnrollmentService
-import persistent4s.examples.school.domain.SchoolEvent
 import persistent4s.examples.school.domain.enrollment.*
+import persistent4s.testkit.implicits.*
 
-class EnrollmentServiceImpl(using EventStore[IO, SchoolEvent]) extends EnrollmentService[IO]:
+class EnrollmentServiceImpl extends EnrollmentService[IO]:
 
   def enrollStudent(studentId: String, courseId: String): IO[Unit] =
     EnrollStudentHandler.run(EnrollStudent(studentId, courseId))
